@@ -14,10 +14,10 @@ class RPropOptimizer(BaseOptimizer):
         self.previous_gradient = None
         self.step_size = None
 
-    def get_learning_rates(self) -> np.ndarray:
+    def get_weights_delta(self) -> np.ndarray:
         return - self.step_size * np.sign(self.previous_gradient)
 
-    def update_learning_rates(self, gradient: np.ndarray) -> None:
+    def update_weights_delta(self, gradient: np.ndarray) -> None:
         if self.previous_gradient is None:
             # First call of the function
             self.step_size = self.step_size_init * np.ones(gradient.shape)

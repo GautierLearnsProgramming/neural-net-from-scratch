@@ -4,9 +4,9 @@ import numpy as np
 
 class BaseOptimizer(ABC):
     @abstractmethod
-    def get_learning_rates(self):
+    def get_weights_delta(self):
         pass
 
     @abstractmethod
-    def update_learning_rates(self, gradient: np.ndarray) -> None:
+    def update_weights_delta(self, gradient: np.ndarray) -> None:
         pass
