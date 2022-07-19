@@ -17,10 +17,10 @@ class DenseLayer(BaseLayer):
         weights: The weights of the layer (shape (input_size, output_size)).
         bias: The bias of the layer (shape (output_size)).
         activation_function: The activation function of the layer.
-        activation_function_dif: The derivative of the activation function of the layer.
+        activation_function_diff: The derivative of the activation function of the layer.
     """
     def __init__(self, input_size, output_size, activation_function: Callable[[float], float] = None,
-                 activation_function_dif: Callable[[float], float] = None, optimizer: BaseOptimizer = None):
+                 activation_function_diff: Callable[[float], float] = None, optimizer: BaseOptimizer = None):
         super().__init__(input_size, output_size)
         self.input = None
         self.weights = np.random.uniform(0, 1, (input_size + 1, output_size))
@@ -29,9 +29,9 @@ class DenseLayer(BaseLayer):
             self.activation_function_dif = np.vectorize(diff_relu)
         else:
             self.activation_function = np.vectorize(activation_function)
-            if activation_function_dif is None:
+            if activation_function_diff is None:
                 raise ValueError("The derivative of the activation function must be provided.")
-            self.activation_function_dif = np.vectorize(activation_function_dif)
+            self.activation_function_dif = np.vectorize(activation_function_diff)
         if optimizer is None:
             self.optimizer = RMSPropOptimizer()
 
@@ -63,7 +63,6 @@ class DenseLayer(BaseLayer):
             next_layer_gradient: The gradient of the loss function with respect to the output of the layer (ndarray of
                 shape (batch_size, output_size)).
         """
-        # print(f'next_layer_gradient_shape: \n{next_layer_gradient.shape}')
 
         weight_gradient = compute_dense_layer_weight_gradient_batch(self.input, next_layer_gradient, self.weights,
                                                                     self.activation_function_dif)
