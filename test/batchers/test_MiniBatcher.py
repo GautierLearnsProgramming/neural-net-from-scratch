@@ -18,3 +18,13 @@ def test_MiniBatcher():
     assert batcher.__bool__() is False
     with pytest.raises(StopIteration):
         batcher.__next__()
+
+    batcher.setData(data)
+    permutation = np.array([0, 1, 8, 5, 3, 4, 7, 9, 6, 2])
+    for index, batch in enumerate(batcher):
+        if index == 0:
+            assert np.array_equal(batch, permutation[:4])
+        elif index == 1:
+            assert np.array_equal(batch, permutation[4:8])
+        elif index == 2:
+            assert np.array_equal(batch, permutation[8:])
