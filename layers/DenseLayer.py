@@ -57,7 +57,21 @@ class DenseLayer(BaseLayer):
         return output
 
     def backward(self, next_layer_gradient: np.ndarray) -> np.ndarray:
-        pass
+        """ Backward pass of the layer.
 
-    def load_weights(self, weights: np.ndarray, bias: np.ndarray):
+        Args:
+            next_layer_gradient: The gradient of the loss function with respect to the output of the layer (ndarray of
+                shape (batch_size, output_size)).
+        """
+        # print(f'next_layer_gradient_shape: \n{next_layer_gradient.shape}')
+
+        weight_gradient = compute_dense_layer_weight_gradient_batch(self.input, next_layer_gradient, self.weights,
+                                                                    self.activation_function_dif)
+        output_gradient = compute_layer_output_gradient_batch(self.input[:, :-1], next_layer_gradient, self.weights[:-1, :],
+                                                              self.activation_function_dif)
+        self.optimizer.update_weights_delta(weight_gradient)
+        self.weights += self.optimizer.get_weights_delta()
+        return output_gradient
+
+    def load_weights(self, weights: np.ndarray):
         self.weights = weights
