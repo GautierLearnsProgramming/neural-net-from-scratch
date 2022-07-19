@@ -50,3 +50,15 @@ class Model:
 
     def eval(self):
         self.eval = True
+        for layer in self.layers:
+            layer.eval()
+
+    def save(self, filename: str):
+        with open(filename, 'wb') as f:
+            pickle.dump(self, f)
+
+    @staticmethod
+    def load(filename: str):
+        with open(filename, 'rb') as f:
+            return pickle.load(f)
+
